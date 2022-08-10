@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -19,7 +20,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(children: const [AddBoardTitle()]),
+      body: Column(children: [AddBoardTitle(), Expanded(child: fetchWishes())]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showPostdialog();
@@ -68,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
           .collection('wishywish')
           .doc(defaultWish)
           .collection('wishes'),
+      child: Text('Loading...'),
       builder: (context, snapshot, _) {
         return MasonryGridView.count(
           crossAxisCount: 4,
@@ -80,27 +82,93 @@ class _MyHomePageState extends State<MyHomePage> {
               // It is safe to call this function from within the build method.
               snapshot.fetchMore();
             }
-            return wishCard(snapshot.docs[index].data());
+            return wishCard(
+                snapshot.docs[index].data(), snapshot.docs[index].id);
           },
         );
       },
     );
   }
 
-  Widget wishCard(Map wish) {
+  Widget wishCard(Map wish, String wishId) {
     return Card(
         elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        margin: EdgeInsets.all(10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ImageTile(url: wish['imagePath']),
             const SizedBox(height: 4),
-            Text(
-              wish['text'],
-              textAlign: TextAlign.start,
+            Padding(
+                padding: EdgeInsets.all(
+                  10,
+                ),
+                child: Text(
+                  wish['text'],
+                  textAlign: TextAlign.start,
+                )),
+            const SizedBox(height: 4),
+            GestureDetector(
+              onTapDown: (TapDownDetails details) {
+                showWishMenu(details.globalPosition, wishId, wish['imagePath']);
+              },
+              child: InkWell(
+                child: Padding(
+                    padding: EdgeInsets.all(
+                      10,
+                    ),
+                    child: Text(
+                      '...',
+                      textAlign: TextAlign.start,
+                    )),
+              ),
             ),
+            const SizedBox(height: 10),
           ],
         ));
+  }
+
+  showWishMenu(Offset position, String wishId, String wishUrl) {
+    double left = position.dx;
+    double top = position.dy;
+    //show menu on button click
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        left,
+        top,
+        left + 1,
+        top + 1,
+      ),
+      items: [
+        PopupMenuItem(
+          child: Text('Delete'),
+          value: 'delete',
+          onTap: () {
+            deleteWish(wishId, wishUrl);
+          },
+        ),
+        PopupMenuItem(
+          child: Text('Edit'),
+          value: 'edit',
+        ),
+      ],
+    );
+  }
+
+  void deleteWish(String wishId, String wishUrl) {
+    FirebaseFirestore.instance
+        .collection('wishywish')
+        .doc(defaultWish)
+        .collection('wishes')
+        .doc(wishId)
+        .delete();
+    if (wishUrl != null) {
+      FirebaseStorage.instance.refFromURL(wishUrl).delete();
+    }
   }
 }

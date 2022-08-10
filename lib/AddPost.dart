@@ -114,4 +114,11 @@ class AddPostState extends State<AddPost> {
                 width: 10,
               ));
   }
+
+  //unsplash api and show in staggered grid
+  //https://api.unsplash.com/search/photos?query=nature&client_id=Ef0Xmfc9-9vcPlOddxedaqbZMlwo5XaO-ExRKSWHDkk
+  void fetchAndShowPics(String query) {
+    // String url =
+    // "https://api.unsplash.com/search/photos?query=$query&client_id=${unsplashApiKey}";
+  }
 }
