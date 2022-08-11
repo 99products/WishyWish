@@ -3,7 +3,8 @@ import 'widgets/groupcard_sample_board.dart';
 import 'widgets/welcome_banner.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({Key? key}) : super(key: key);
+  final Function onClick;
+  const WelcomePage({Key? key, required this.onClick}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,8 @@ class WelcomePage extends StatelessWidget {
                       height: 60,
                       color: Colors.blue,
                     ),
-                    WelcomeBanner(maxHeight: constraints.maxHeight),
+                    WelcomeBanner(
+                        maxHeight: constraints.maxHeight, onClick: onClick),
                     GroupCardSampleBoard(),
                   ])))),
     );

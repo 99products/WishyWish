@@ -53,9 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text('Post')),
             InkWell(
               child: Text('Discard Post'),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
+              onTap: () {},
             )
           ],
         );

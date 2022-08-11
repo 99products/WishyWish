@@ -6,8 +6,11 @@ class WelcomeBanner extends StatelessWidget {
       "Make someones memorable day even more memorable with WishyBoard";
   final String caption =
       "Lets start the celebration!!! Create your group card now!!!";
+  final Function onClick;
 
-  const WelcomeBanner({Key? key, required this.maxHeight}) : super(key: key);
+  const WelcomeBanner(
+      {Key? key, required this.maxHeight, required this.onClick})
+      : super(key: key);
 
   Widget messageBuilder(String message, double fontSize, FontWeight weight) {
     return SizedBox(
@@ -48,7 +51,7 @@ class WelcomeBanner extends StatelessWidget {
                 style: TextStyle(fontSize: 18),
               ),
               onPressed: () {
-                Navigator.of(context).pushNamed('/wishyboard');
+                onClick("wishyboard");
               },
             ),
           ],
