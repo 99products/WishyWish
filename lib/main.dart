@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:wishywish/Pages/PostPage/addpost_page.dart';
 import 'package:wishywish/Pages/HomePage/myhome_page.dart';
 import 'firebase_options.dart';
 import 'Pages/WelcomePage/welcome_page.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         routes: {
-          '/': (context) => const WelcomePage(),
+          '/': (context) => AddPost(),
           '/wishyboard': (context) => const MyHomePage(),
         });
   }

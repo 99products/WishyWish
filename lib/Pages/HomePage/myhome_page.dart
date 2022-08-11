@@ -2,7 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:wishywish/AddPost.dart';
+import 'package:wishywish/Pages/PostPage/addpost_page.dart';
 import 'package:wishywish/common.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import '../../common.dart';
@@ -23,7 +23,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(children: [AddBoardTitle(), Expanded(child: fetchWishes())]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showPostdialog();
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddPost()),
+          );
         },
         tooltip: 'Add post',
         child: const Icon(Icons.add),
