@@ -3,6 +3,8 @@ import 'package:wishywish/routes/wishy_route_path.dart';
 
 class WishyRouteInformationParser
     extends RouteInformationParser<WishyRoutePath> {
+  List<String> pages = ['wishyboard', 'create'];
+
   @override
   Future<WishyRoutePath> parseRouteInformation(
       RouteInformation routeInformation) async {
@@ -14,8 +16,8 @@ class WishyRouteInformationParser
 
     if (uri.pathSegments.length == 1) {
       final String pathName = uri.pathSegments.elementAt(0).toString();
-      if (pathName == 'wishyboard') {
-        WishyRoutePath.myHomesPage(pathName);
+      if (pages.contains(pathName)) {
+        return WishyRoutePath.otherPage(pathName);
       }
     }
     return WishyRoutePath.unknownPage('error');
@@ -24,13 +26,13 @@ class WishyRouteInformationParser
   @override
   RouteInformation? restoreRouteInformation(WishyRoutePath configuration) {
     // Need to handle error scenario
-    // if (configuration.isUnknown) {
-    //   return const RouteInformation(location: '/error');
-    // }
+    if (configuration.isUnknown) {
+      return const RouteInformation(location: '/error');
+    }
     if (configuration.isWelcomePage) {
       return const RouteInformation(location: '/');
     }
-    if (configuration.isMyHomePage) {
+    if (configuration.isOtherPage) {
       return RouteInformation(location: '/${configuration.pathName}');
     }
 

@@ -6,10 +6,10 @@ class WishyRoutePath {
       : pathName = null,
         isUnknown = false;
 
-  WishyRoutePath.myHomesPage(this.pathName) : isUnknown = false;
+  WishyRoutePath.otherPage(this.pathName) : isUnknown = false;
 
   WishyRoutePath.unknownPage(this.pathName) : isUnknown = true;
 
   bool get isWelcomePage => pathName == null;
-  bool get isMyHomePage => pathName != null;
+  bool get isOtherPage => pathName != null;
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wishywish/Pages/HomePage/myhome_page.dart';
+import 'package:wishywish/Pages/PostPage/addpost_page.dart';
 import '../Pages/WelcomePage/welcome_page.dart';
 import 'wishy_route_path.dart';
+import 'package:wishywish/Pages/ErrorPage/error_page.dart';
+import 'pages.dart' as constant;
 
 class WishyRouterDelegate extends RouterDelegate<WishyRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<WishyRoutePath> {
@@ -14,9 +17,9 @@ class WishyRouterDelegate extends RouterDelegate<WishyRoutePath>
   @override
   WishyRoutePath get currentConfiguration {
     if (pathName == null) {
-      WishyRoutePath.welcomePage();
+      return WishyRoutePath.welcomePage();
     }
-    return WishyRoutePath.myHomesPage(pathName);
+    return WishyRoutePath.otherPage(pathName);
   }
 
   void onClick(String path) {
@@ -32,11 +35,20 @@ class WishyRouterDelegate extends RouterDelegate<WishyRoutePath>
         MaterialPage(
             key: const ValueKey('WelcomePage'),
             child: WelcomePage(onClick: onClick)),
-        if (pathName != null)
-          MaterialPage(key: ValueKey(pathName), child: const MyHomePage())
+        if (isError)
+          const MaterialPage(key: ValueKey('UnknownPage'), child: ErrorPage())
+        else if (pathName == constant.home)
+          MaterialPage(
+              key: ValueKey(pathName), child: MyHomePage(onClick: onClick))
+        else if (pathName == constant.create)
+          MaterialPage(key: ValueKey(pathName), child: AddPost())
       ],
       onPopPage: (route, result) {
         if (!route.didPop(result)) return false;
+
+        pathName = null;
+        isError = false;
+        notifyListeners();
 
         return true;
       },
@@ -51,7 +63,7 @@ class WishyRouterDelegate extends RouterDelegate<WishyRoutePath>
       return;
     }
 
-    if (configuration.isMyHomePage) {
+    if (configuration.isOtherPage) {
       if (configuration.pathName != null) {
         pathName = configuration.pathName;
         isError = false;
